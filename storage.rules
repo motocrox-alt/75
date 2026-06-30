@@ -7,8 +7,8 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /progress/{uid}/{allPaths=**} {
       allow read, write: if request.auth != null && (
-        (request.auth.token.email == 'CORREO_DE_GIO@ejemplo.com'   && uid == 'gio') ||
-        (request.auth.token.email == 'CORREO_DE_JENNI@ejemplo.com' && uid == 'jenni')
+        (request.auth.token.email == 'gioeh123@gmail.com'   && uid == 'gio') ||
+        (request.auth.token.email == 'jennics1203@gmail.com' && uid == 'jenni')
       );
     }
   }

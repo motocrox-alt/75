@@ -6,8 +6,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // === Correos autorizados (los dos jugadores) ===
-    function emailGio()   { return 'CORREO_DE_GIO@ejemplo.com'; }
-    function emailJenni() { return 'CORREO_DE_JENNI@ejemplo.com'; }
+    function emailGio()   { return 'gioeh123@gmail.com'; }
+    function emailJenni() { return 'jennics1203@gmail.com'; }
 
     function esMiembro() {
       return request.auth != null &&
