@@ -31,3 +31,19 @@ export const WARDROBE: Pieza[] = [
 
 export const desbloqueada = (p: Pieza, diaReto: number): boolean =>
   diaReto >= p.unlockDay;
+
+// ── Condiciones de desbloqueo (hito / nivel / logro) ──────
+// Hoy casi todo es por hito (unlockDay). Las excepciones por nivel/logro se
+// declaran en CONDICION_OVERRIDE; el resto cae al hito por defecto, manteniendo
+// compatibilidad con desbloqueada().
+export type Condicion =
+  | { tipo: "hito"; dia: number }
+  | { tipo: "nivel"; nivel: number }
+  | { tipo: "logro"; logroId: string };
+
+const CONDICION_OVERRIDE: Record<string, Condicion> = {
+  // ej. futura: lentes por nivel, atuendo de erudito por logro 'biblioteca'.
+};
+
+export const condicionDe = (p: Pieza): Condicion =>
+  CONDICION_OVERRIDE[p.id] ?? { tipo: "hito", dia: p.unlockDay };

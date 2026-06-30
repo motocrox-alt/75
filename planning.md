@@ -81,12 +81,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 - [x] `lib/game/cierre.ts` — `aplicarCierreDia(player, log, ts)` PURO → player nuevo + xpLogEntries + subioNivel
 - [x] Vitest configurado (`vitest.config.ts`, scripts `test`/`test:watch`) + 19 tests verdes (evaluarDia, xp, leveling, cierre)
 
-**B2/B3 — pendientes**
-- [ ] `lib/game/streaks.ts` — micro-rachas con escudos; racha del reto sin escudo
-- [ ] `lib/game/reinicio.ts` — `decidirReinicio(jugadorA, jugadorB)` **solidario**: si cualquiera falla → reinicio para ambos, conserva personaje
-- [ ] `lib/game/achievements.ts` — `chequearLogros(estado)`
-- [ ] `lib/game/wardrobe.ts` — `chequearOutfits(estado)` → desbloqueos por hito/nivel/logro (append a `wardrobe`)
-- [ ] **Tests** de cada función pura (Vitest): día perfecto, día fallido, finde con/sin ambos, reinicio solidario, escudos, desbloqueo de outfits por hito
+**B2 — Rachas · reinicio solidario · logros · outfits (puro + tests) ✅**
+- [x] `config/streaks.ts` + `lib/game/streaks.ts` — micro-rachas con escudos; racha del reto sin escudo
+- [x] `lib/game/reinicio.ts` — `decidirReinicio` **solidario** + `aplicarReinicio` (no recibe ni toca players; conserva personaje)
+- [x] `lib/game/achievements.ts` — `chequearLogros(ctx)` (no re-desbloquea)
+- [x] `lib/game/wardrobe.ts` — `chequearOutfits(ctx)` por hito/nivel/logro + `Condicion` en `config/wardrobe.ts`
+- [x] **Tests** Vitest: escudos, reinicio solidario, logros por umbral, outfits por hito/nivel/logro — 43 tests verdes (B1+B2)
+
+**B3 — pendiente (cablear a stores/UI)**
 - [ ] Cablear engine a stores (usePlayerStore, usePactoStore, useDayStore, useAvatarStore) sobre mock
 - [ ] Cierre de día: aplica XP, actualiza stats/caches, chequea logros **y outfits**, evalúa reinicio
 
