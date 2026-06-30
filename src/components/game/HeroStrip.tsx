@@ -3,7 +3,7 @@
 // Bloque del personaje: avatar + nivel + barra de XP, y panel de Vínculo
 // con el status del compañero (nivel + avance de hoy).
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { AvatarCanvas } from "@/components/avatar/AvatarCanvas";
+import { AvatarVivo } from "@/components/avatar/AvatarVivo";
 import { PixelIcon } from "@/components/game/PixelIcon";
 import { xpParaNivel, progresoNivel } from "@/config/leveling";
 import { MISIONES } from "@/config/rules";
@@ -34,7 +34,7 @@ export function HeroStrip({ char, partnerChar, partner, partnerAvance }: Props) 
       {/* Personaje */}
       <div className="flex items-center gap-3 border-4 border-ink bg-cloud p-3 shadow-[4px_4px_0_rgba(0,0,0,0.3)] sm:flex-1">
         <div className="shrink-0 border-2 border-ink bg-sky p-1">
-          <AvatarCanvas char={char} avatar={player.avatar} scale={3} />
+          <AvatarVivo char={char} avatar={player.avatar} scale={3} />
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="font-press text-xs text-ink">{player.nombre}</span>

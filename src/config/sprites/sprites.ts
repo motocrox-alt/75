@@ -22,8 +22,8 @@ export const pad = (a: string[], h: number = AV_H): string[] => {
 // PERSONAJES
 // ──────────────────────────────────────────────────────────
 export const CHARS: Record<string, CharDef> = {
-  gio:   { name: 'Gio',   skin: '#E8A06A', skinShadow: '#C07A44', hair: '#3A2A1E' },
-  jenni: { name: 'Jenni', skin: '#F4CF9E', skinShadow: '#D9A874', hair: '#F0C840' },
+  gio:   { name: 'Gio',   skin: '#F2CC9C', skinShadow: '#D8A876', hair: '#4A3525' },
+  jenni: { name: 'Jenni', skin: '#F8D8B4', skinShadow: '#E0B488', hair: '#2E2018' },
 };
 
 /** Paleta base por personaje. La capa de pelo usa 'H'; los outfits usan 'S' para las manos. */
@@ -49,6 +49,9 @@ export const BASE: string[] = pad([
   '..OSSSSSSSSSSO..', '...OSSSSSSSSO...', '...OSSSSSSSSO...', '....OSSOOSSO....',
   '....OSSOOSSO....', '....OSSOOSSO....', '....UUUUUUUU....', '....oo..oo......',
 ]);
+
+/** BASE con los ojos cerrados (fila 5 = piel), para el parpadeo del avatar vivo. */
+export const BASE_BLINK: string[] = BASE.map((r, i) => (i === 5 ? '..OSSSSSSSSSSO..' : r));
 
 // ──────────────────────────────────────────────────────────
 // PELO (overlay sobre el cuerpo)  — slot: hair
@@ -94,6 +97,14 @@ export const OUTFIT: Record<string, Sprite> = {
     colors: { A: '#FBD000', B: '#C89000', W: '#FFFFFF', R: '#E03B2C' }, // armadura legendaria + capa
     unlockDay: 75, // jefe final — día 75
   },
+  chaleco: { // look de Gio: camisa blanca + chaleco negro + jeans claros
+    data: pad(['','','','','','','','','','','','..WWNNNNNNNNWW..','..WWNNWWWWNNWW..','..WWNNWWWWNNWW..','..SWNNWWWWNNWS..','...NNWWWWWWNN...','...WWWWWWWWWW...','...LLLLLLLLLL...','...LLLLLLLLLL...','....LLL..LLL....','....LLL..LLL....','....LLL..LLL....']),
+    colors: { W: '#FFFFFF', N: '#201A10', L: '#B8C4D8' },
+  },
+  topblanco: { // look de Jenni: top blanco strapless + jeans azules
+    data: pad(['','','','','','','','','','','','....WWWWWWWW....','...SWWWWWWWWS...','...SWWWWWWWWS...','....WWWWWWWW....','...JJJJJJJJJJ...','...JJJJJJJJJJ...','...JJJJJJJJJJ...','...JJJJJJJJJJ...','....JJJ..JJJ....','....JJJ..JJJ....','....JJJ..JJJ....']),
+    colors: { W: '#FFFFFF', J: '#4A7CC0' },
+  },
 };
 export const OUTFIT_LIST = [
   { id: 'tee', name: 'Tee', unlockDay: 1 },
@@ -102,6 +113,8 @@ export const OUTFIT_LIST = [
   { id: 'dress', name: 'Vestido', unlockDay: 1 },
   { id: 'ember', name: 'Armadura', unlockDay: 38 },
   { id: 'gold', name: 'Legendaria', unlockDay: 75 },
+  { id: 'chaleco', name: 'Chaleco', unlockDay: 1 },
+  { id: 'topblanco', name: 'Top', unlockDay: 1 },
 ];
 
 // ──────────────────────────────────────────────────────────
@@ -112,6 +125,10 @@ export const ACC: Record<string, Sprite> = {
   gorra:   { data: pad(['....CCCCCCCC....', '...CCCCCCCCCC...', '..CCCCCCCCCCCC..', '..CCCCCCCCCCCC..', '..BBBBBB........']), colors: { C: '#E03B2C', B: '#A01818' } },
   diadema: { data: pad(['', '', '.........CC.....', '..CCCCCCCCCCCC..']), colors: { C: '#FBD000' } },
   lentes:  { data: pad(['', '', '', '', '...LLLL.LLLL....']), colors: { L: '#201A10' } },
+  lentes_sol: { // lentes de sol (look signature de Gio & Jenni)
+    data: pad(['', '', '', '', '....LLLLLLLL....', '....LwL..LwL....']),
+    colors: { L: '#201A10', w: '#7AA0D0' },
+  },
   corona:  { data: pad(['...G.G.G.G.G....', '...GGGGGGGGG....']), colors: { G: '#FBD000' }, unlockDay: 75 },
 };
 export const ACC_LIST = [
@@ -119,6 +136,7 @@ export const ACC_LIST = [
   { id: 'gorra', name: 'Gorra', unlockDay: 1 },
   { id: 'diadema', name: 'Diadema', unlockDay: 1 },
   { id: 'lentes', name: 'Lentes', unlockDay: 7 },
+  { id: 'lentes_sol', name: 'Lentes de sol', unlockDay: 1 },
   { id: 'corona', name: 'Corona', unlockDay: 75 },
 ];
 
@@ -194,6 +212,7 @@ export function renderAvatar(
   outfitId: string,
   accId: string,
   scale: number,
+  blink: boolean = false,
 ): void {
   const c = CHARS[charKey];
   const base = basePalette(c);
@@ -202,7 +221,7 @@ export function renderAvatar(
   const ctx = canvas.getContext('2d')!;
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawLayer(ctx, BASE, base, scale);
+  drawLayer(ctx, blink ? BASE_BLINK : BASE, base, scale);
   if (HAIR[hairId]) drawLayer(ctx, HAIR[hairId], base, scale);
   const o = OUTFIT[outfitId];
   if (o) drawLayer(ctx, o.data, { ...base, ...o.colors }, scale);

@@ -12,6 +12,7 @@ import { MISIONES } from "@/config/rules";
 import { MISSION_ICON, CHARS } from "@/config/sprites/sprites";
 import { contarObligatorias } from "@/lib/dia";
 import { useCierreStore } from "@/stores/useCierreStore";
+import { useAvatarFxStore } from "@/stores/useAvatarFxStore";
 import { RetoBar } from "@/components/game/RetoBar";
 import { HeroStrip } from "@/components/game/HeroStrip";
 import { MissionCard } from "@/components/game/MissionCard";
@@ -48,6 +49,9 @@ export default function HoyPage() {
 
   const cerrarDia = useCierreStore((s) => s.cerrarDia);
   const cerrando = useCierreStore((s) => s.cerrando);
+
+  const reacciona = useAvatarFxStore((s) => s.reacciona);
+  const celebra = useAvatarFxStore((s) => s.celebra);
 
   const [partner, setPartner] = useState<Player | null>(null);
   const [partnerAvance, setPartnerAvance] = useState(0);
@@ -86,9 +90,42 @@ export default function HoyPage() {
     prevPerfecto.current = perfecto;
   }, [perfecto]);
 
+  // Celebración del avatar al cerrar un día perfecto.
+  const prevCerrado = useRef(false);
+  useEffect(() => {
+    const cerradoPerfecto = !!log?.cerrado && !!log?.perfecto;
+    if (cerradoPerfecto && !prevCerrado.current) celebra();
+    prevCerrado.current = !!log?.cerrado;
+  }, [log?.cerrado, log?.perfecto, celebra]);
+
   if (!jugador || !log) {
     return <p className="font-silk text-ink/60">Cargando…</p>;
   }
+
+  // Estado "crudo" (campo) de una misión, para detectar la transición a marcada.
+  const rawHecha = (id: MisionId): boolean => {
+    const ms = log.misiones;
+    switch (id) {
+      case "entrenar":
+        return ms.entrenar.hecho;
+      case "chela":
+        return ms.chela.ok;
+      case "comer":
+        return ms.comida.ok;
+      case "agua":
+        return ms.agua.ok;
+      case "leer":
+        return ms.lectura.ok;
+      case "foto":
+        return ms.foto.ok;
+    }
+  };
+
+  const marcar = (id: MisionId) => {
+    const era = rawHecha(id);
+    toggleMision(id);
+    if (!era) reacciona(id); // solo al marcar (no al desmarcar)
+  };
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-4">
@@ -158,7 +195,7 @@ export default function HoyPage() {
               titulo={TITULO[m.id]}
               subtitulo={subtitulo}
               cumplida={verde}
-              onToggle={() => toggleMision(m.id)}
+              onToggle={() => marcar(m.id)}
               badge={badge}
             />
           );

@@ -4,12 +4,14 @@
 // Finde = misión de pareja "juntitos": solo verde si ambos confirman.
 import { MissionCard } from "@/components/game/MissionCard";
 import { useDayStore } from "@/stores/useDayStore";
+import { useAvatarFxStore } from "@/stores/useAvatarFxStore";
 
 export function ChelaMission({ otroNombre }: { otroNombre: string }) {
   const log = useDayStore((s) => s.log);
   const parejaChelaOk = useDayStore((s) => s.parejaChelaOk);
   const toggleMision = useDayStore((s) => s.toggleMision);
   const cumplida = useDayStore((s) => s.cumplida);
+  const reacciona = useAvatarFxStore((s) => s.reacciona);
 
   if (!log) return null;
 
@@ -45,7 +47,11 @@ export function ChelaMission({ otroNombre }: { otroNombre: string }) {
       titulo={titulo}
       subtitulo={subtitulo}
       cumplida={verde}
-      onToggle={() => toggleMision("chela")}
+      onToggle={() => {
+        const era = mine;
+        toggleMision("chela");
+        if (!era) reacciona("chela"); // solo al marcar
+      }}
       accent
       badge={badge}
     />

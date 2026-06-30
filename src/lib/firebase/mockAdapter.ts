@@ -43,7 +43,7 @@ const seedGio: Player = PlayerSchema.parse({
   stats: { fuerza: 58, templanza: 44, vitalidad: 40, mente: 36, constancia: 22, vinculo: 64 },
   rachaReto: DIA_RETO,
   ultimoDiaCerrado: hoyKey(new Date(Date.now() - 86_400_000)),
-  avatar: { piel: undefined, pelo: "corto", outfit: "tee", accesorio: "none" },
+  avatar: { piel: undefined, pelo: "corto", outfit: "chaleco", accesorio: "lentes_sol" },
 });
 
 const seedJenni: Player = PlayerSchema.parse({
@@ -53,7 +53,7 @@ const seedJenni: Player = PlayerSchema.parse({
   stats: { fuerza: 40, templanza: 50, vitalidad: 46, mente: 48, constancia: 30, vinculo: 64 },
   rachaReto: DIA_RETO,
   ultimoDiaCerrado: hoyKey(new Date(Date.now() - 86_400_000)),
-  avatar: { piel: undefined, pelo: "largo", outfit: "dress", accesorio: "diadema" },
+  avatar: { piel: undefined, pelo: "largo", outfit: "topblanco", accesorio: "lentes_sol" },
 });
 
 const players: Record<string, Player> = { gio: seedGio, jenni: seedJenni };
