@@ -36,7 +36,7 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 - [x] Toggle/registro por misión, estado verde/pendiente (`useDayStore`, persiste en mock)
 - [x] Barra de progreso del reto (día N/75) + nivel/XP del jugador (`RetoBar` + `HeroStrip` con `progresoNivel`)
 - [x] Confeti (canvas-confetti) al cerrar día perfecto (transición no-perfecto→perfecto, respeta reduced-motion)
-- [x] Lógica de la chela según día de la semana (semana=individual / finde=pareja sobre mock) + panel de Vínculo con status del compañero + `DayBanner` dinámico
+- [x] Lógica de la cerveza según día de la semana (semana=individual / finde=pareja sobre mock) + panel de Vínculo con status del compañero + `DayBanner` dinámico
 
 **Sesión A3 — Mi personaje**
 - [x] Ficha RPG: 6 stats como barras + radar (Recharts) — `StatBars` + `StatRadar` (estilo NES) + `config/stats.ts`
@@ -54,7 +54,7 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 **Sesión A5 — Pareja**
 - [x] Vista read-only del otro: su día de hoy, nivel, racha, **su avatar con outfit** — `PartnerCard` + `usePartnerStore`
 - [x] Barra de **Vínculo** compartida (`BondPanel`, del pacto)
-- [x] Misión de chela del finde (confirmación de ambos) — reusa `ChelaMission`; recordatorio entre semana
+- [x] Misión de cerveza del finde (confirmación de ambos) — reusa `ChelaMission`; recordatorio entre semana
 - [x] Los dos avatares juntos (`PairView` con corazón) + sincronía del día (`SyncIndicator`)
 
 **Sesión A6 — Calendario**

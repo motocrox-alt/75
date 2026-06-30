@@ -42,18 +42,18 @@ App web **co-op de pareja** para hacer el reto **75 Hard** gamificado como RPG. 
 | Misión | Stat | XP | ¿Cuenta para "día cumplido"? |
 |---|---|---|---|
 | **Entrenar** (mín 1, ideal 2) | 💪 Fuerza | 20 (1x) +15 bonus (2x) | **Sí** (≥1) |
-| **Chela** (semana: sin / finde: juntitos) | 🍃 Templanza / ❤️ Vínculo | 25 | **Sí** |
+| **Cerveza** (semana: sin / finde: juntitos) | 🍃 Templanza / ❤️ Vínculo | 25 | **Sí** |
 | **Comer limpio** | 🍃 Templanza | 20 | **Sí** |
 | **Agua** | 💧 Vitalidad | 15 | **Sí** |
 | **Leer 10 páginas** | 📖 Mente | 20 | **Sí** |
 | **Foto de progreso** | 📸 Constancia | 20 | **NO — opcional, solo bonus** |
 | *Día perfecto* (auto) | ❤️ Vínculo | +30 | meta-bonus si las obligatorias están en verde |
 
-**Criterio de "día cumplido"** (decide si la racha del reto sigue viva): entrenar≥1, chela respetada, comer limpio, agua, leer → **las 5 en verde**. La foto **no** entra; es opcional y solo suma XP/stat Constancia si se sube.
+**Criterio de "día cumplido"** (decide si la racha del reto sigue viva): entrenar≥1, cerveza respetada, comer limpio, agua, leer → **las 5 en verde**. La foto **no** entra; es opcional y solo suma XP/stat Constancia si se sube.
 
-### La chela (regla estrella)
-- **Lun–jue:** misión individual *"sin chela"* → toggle. Cumplir = Templanza.
-- **Vie–dom:** se vuelve **misión de pareja "chela juntitos"**. Solo cuenta si **ambos** la confirman ese finde → XP de Vínculo a los dos.
+### La cerveza (regla estrella)
+- **Lun–jue:** misión individual *"sin cerveza"* → toggle. Cumplir = Templanza.
+- **Vie–dom:** se vuelve **misión de pareja "cerveza juntitos"**. Solo cuenta si **ambos** la confirman ese finde → XP de Vínculo a los dos.
 - Tomar solo / entre semana → rompe la regla → día fallido para esa persona.
 
 ### Fallo y reinicio — **SOLIDARIO** (confirmado)
@@ -76,7 +76,7 @@ App web **co-op de pareja** para hacer el reto **75 Hard** gamificado como RPG. 
 - **Rachas:**
   - *Micro-rachas de stat* (ej. agua 12 días): **con escudos**, un día perdido se absorbe.
   - *Racha del reto (contador 75)*: **sin escudo** (es 75 Hard), reinicio solidario.
-- **Logros:** append-only, una vez. Semilla: Primer paso (d1), La primera semana (7), Mitad del camino (38), Hidratado de acero (30 agua), Rata de biblioteca (750 pág), Ritual sagrado (1er finde chela), Sincronía (10 días ambos en verde), Inquebrantables (75 — jefe final).
+- **Logros:** append-only, una vez. Semilla: Primer paso (d1), La primera semana (7), Mitad del camino (38), Hidratado de acero (30 agua), Rata de biblioteca (750 pág), Ritual sagrado (1er finde cerveza), Sincronía (10 días ambos en verde), Inquebrantables (75 — jefe final).
 - **Funciones puras clave:** `evaluarDia(dayLog)`, `calcularXpDia(dayLog)`, `decidirReinicio(jugadorA, jugadorB)`, `aplicarGananciaXp(...)`, `chequearLogros(...)`, `actualizarRacha(...)`, `chequearOutfits(estado)`.
 
 ---

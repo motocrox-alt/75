@@ -16,7 +16,7 @@
 
 Dos aventureros pixel-art firman un **reto de 75 días**. Cada día es una serie de **misiones** (las reglas). Cumplirlas da **XP**, sube **stats**, desbloquea **logros** y **outfits**, y mantiene viva la **racha de pareja**. El día 75 es el "jefe final": completarlo juntos es la victoria, y desbloquea el outfit legendario.
 
-La capa romántica no es decorativa: hay misiones que **solo se completan en pareja** (la chela del finde juntitos), una **barra de Vínculo** compartida, y los dos avatares aparecen juntos. La narrativa siempre es "los dos contra el reto", nunca uno contra el otro.
+La capa romántica no es decorativa: hay misiones que **solo se completan en pareja** (la cerveza del finde juntitos), una **barra de Vínculo** compartida, y los dos avatares aparecen juntos. La narrativa siempre es "los dos contra el reto", nunca uno contra el otro.
 
 **Tono:** motivación + complicidad, cero vergüenza. El fallo no humilla, invita a volver.
 
@@ -29,16 +29,16 @@ Las reglas del reto, formalizadas como **quests diarias**. Cada una mapea a un *
 | # | Misión diaria | Stat | XP base | ¿Cuenta para "día cumplido"? |
 |---|---|---|---|---|
 | 1 | **Entrenar** (mín 1, ideal 2) | 💪 Fuerza | 20 (1x) +15 bonus (2x) | **Sí** (≥1) |
-| 2 | **Chela** (semana: sin / finde: juntitos) | 🍃 Templanza / ❤️ Vínculo | 25 | **Sí** |
+| 2 | **Cerveza** (semana: sin / finde: juntitos) | 🍃 Templanza / ❤️ Vínculo | 25 | **Sí** |
 | 3 | **Comer limpio** | 🍃 Templanza | 20 | **Sí** |
 | 4 | **Tomar agua** | 💧 Vitalidad | 15 | **Sí** |
 | 5 | **Leer 10 páginas** | 📖 Mente | 20 | **Sí** |
 | 6 | **Foto de progreso** | 📸 Constancia | 20 | **NO — opcional, solo bonus** |
 | 7 | *Día perfecto* (auto) | ❤️ Vínculo | +30 | meta-bonus si las obligatorias están en verde |
 
-**Criterio de "día cumplido"** (decide si la racha del reto sigue viva): entrenar≥1, chela respetada, comer limpio, agua, leer → **las 5 en verde**. La **foto es opcional**: no rompe el día, solo suma XP/Constancia si se sube.
+**Criterio de "día cumplido"** (decide si la racha del reto sigue viva): entrenar≥1, cerveza respetada, comer limpio, agua, leer → **las 5 en verde**. La **foto es opcional**: no rompe el día, solo suma XP/Constancia si se sube.
 
-**Stat de pareja (❤️ Vínculo):** sube con días sincronizados y con la chela del finde.
+**Stat de pareja (❤️ Vínculo):** sube con días sincronizados y con la cerveza del finde.
 
 ---
 
@@ -56,17 +56,17 @@ Las reglas del reto, formalizadas como **quests diarias**. Cada una mapea a un *
 2. **Racha del reto (contador 75)**: **sin escudo** (es 75 Hard). Reinicio solidario (§5) — pero nunca borra el personaje.
 
 ### Logros
-Append-only, una vez. Semilla: Primer paso (d1), La primera semana (7), Mitad del camino (38), Hidratado de acero (30 agua), Rata de biblioteca (750 pág), Ritual sagrado (1er finde chela), Sincronía (10 días ambos en verde), Inquebrantables (75 — jefe final). **Varios logros desbloquean outfits** (§7).
+Append-only, una vez. Semilla: Primer paso (d1), La primera semana (7), Mitad del camino (38), Hidratado de acero (30 agua), Rata de biblioteca (750 pág), Ritual sagrado (1er finde cerveza), Sincronía (10 días ambos en verde), Inquebrantables (75 — jefe final). **Varios logros desbloquean outfits** (§7).
 
 ---
 
 ## 4. Mecánicas de pareja (co-op)
 
 - **Vista del compañero:** pantalla de Jenni/Gio con su nivel, su día (verde/pendiente), su racha y **su avatar con el outfit equipado**. Read-only — cada quien marca lo suyo (honestidad del 75 Hard).
-- **Barra de Vínculo (❤️):** stat compartido, sube con sincronía y la chela del finde. Visible en ambos dashboards.
-- **La chela (regla estrella):**
-  - *Lun–jue:* misión individual "sin chela" → toggle = Templanza.
-  - *Vie–dom:* se vuelve **misión de pareja "chela juntitos"** — solo cuenta si **ambos** confirman ese finde → XP de Vínculo a los dos. Tomar solo/entre semana → rompe la regla → día fallido.
+- **Barra de Vínculo (❤️):** stat compartido, sube con sincronía y la cerveza del finde. Visible en ambos dashboards.
+- **La cerveza (regla estrella):**
+  - *Lun–jue:* misión individual "sin cerveza" → toggle = Templanza.
+  - *Vie–dom:* se vuelve **misión de pareja "cerveza juntitos"** — solo cuenta si **ambos** confirman ese finde → XP de Vínculo a los dos. Tomar solo/entre semana → rompe la regla → día fallido.
 - **Sincronía:** los dos cierran el día en verde → bonus de Vínculo + alimenta el logro Sincronía. Los **dos avatares aparecen juntos** (parejita pixel) en el dashboard.
 
 ---
@@ -189,7 +189,7 @@ src/
 2. **Hoy** — las 6 misiones (foto opcional), barra del reto (día N/75), nivel/XP, confeti al día perfecto, **tu avatar** arriba.
 3. **Mi personaje** — ficha RPG: stats (barras + radar), nivel, logros, racha, **avatar grande**.
 4. **Vestidor** — equipar outfits desbloqueados, preview en vivo, piezas bloqueadas con su condición.
-5. **Pareja** — vista del otro: su día, nivel, **su avatar**, barra de Vínculo, chela del finde.
+5. **Pareja** — vista del otro: su día, nivel, **su avatar**, barra de Vínculo, cerveza del finde.
 6. **Calendario** — heatmap de los 75 días.
 7. **Logros** — galería desbloqueados / por desbloquear.
 8. **Historial / Intentos** — intentos del reto, antes/después con fotos.
