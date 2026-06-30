@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// Reglas de Firestore para "Reto 75 Juntos" (2 cuentas: Gio y Jenni).
+// ⚠️ ANTES DE DESPLEGAR: reemplaza los dos correos de abajo por los reales.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // === Correos autorizados (los dos jugadores) ===
+    function emailGio()   { return 'CORREO_DE_GIO@ejemplo.com'; }
+    function emailJenni() { return 'CORREO_DE_JENNI@ejemplo.com'; }
+
+    function esMiembro() {
+      return request.auth != null &&
+        (request.auth.token.email == emailGio() || request.auth.token.email == emailJenni());
+    }
+    // Correo → slug ('gio' | 'jenni')
+    function slugDe(email) {
+      return email == emailGio() ? 'gio' : (email == emailJenni() ? 'jenni' : 'nadie');
+    }
+    function esMio(uid) {
+      return request.auth != null && slugDe(request.auth.token.email) == uid;
+    }
+
+    // Pacto compartido: ambos leen y escriben (contador, vínculo, intentos).
+    match /pacto/{pactoId} {
+      allow read, write: if esMiembro();
+
+      // Intentos: append-only (crear sí; editar/borrar no).
+      match /intentos/{intentoId} {
+        allow read, create: if esMiembro();
+        allow update, delete: if false;
+      }
+    }
+
+    // Players: ambos LEEN (vista de pareja, read-only); cada quien escribe SOLO lo suyo.
+    match /players/{uid} {
+      allow read: if esMiembro();
+      allow write: if esMio(uid);
+
+      // Subcolecciones (dayLogs, xpLog, achievements, wardrobe, meta): mismo criterio.
+      match /{document=**} {
+        allow read: if esMiembro();
+        allow write: if esMio(uid);
+      }
+    }
+  }
+}

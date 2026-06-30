@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { useAuthStore, type Jugador } from "@/stores/useAuthStore";
 import { useDayStore, type MisionId } from "@/stores/useDayStore";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import { hoyKey } from "@/lib/utils/date";
 import { MISIONES } from "@/config/rules";
 import { MISSION_ICON, CHARS } from "@/config/sprites/sprites";
@@ -67,8 +67,8 @@ export default function HoyPage() {
     const otro = otroDe(jugador);
     (async () => {
       const [p, dl] = await Promise.all([
-        mockAdapter.getPlayer(otro),
-        mockAdapter.getDayLog(otro, hoyKey()),
+        adapter.getPlayer(otro),
+        adapter.getDayLog(otro, hoyKey()),
       ]);
       setPartner(p);
       setPartnerAvance(contarObligatorias(dl));

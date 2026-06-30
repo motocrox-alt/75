@@ -1,6 +1,6 @@
-// Pacto (reto compartido). Lee del mockAdapter.
+// Pacto (reto compartido). Lee del adapter.
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { Pacto } from "@/lib/schemas";
 
@@ -16,14 +16,15 @@ interface PactoState {
 export const usePactoStore = create<PactoState>((set, get) => ({
   pacto: null,
   cargar: async () => {
-    const pacto = await mockAdapter.getPacto();
+    const pacto = await adapter.getPacto();
     set({ pacto });
   },
   estadoReto: () => {
     const { pacto } = get();
     if (pacto?.retoEstado === "completado") return "completado";
-    const { haEntrado } = useAuthStore.getState();
-    const ambos = haEntrado.gio && haEntrado.jenni;
+    // En real manda pacto.haEntrado; en mock, el authStore (ambos true).
+    const ha = pacto?.haEntrado ?? useAuthStore.getState().haEntrado;
+    const ambos = ha.gio && ha.jenni;
     return ambos ? "activo" : "pendiente";
   },
 }));

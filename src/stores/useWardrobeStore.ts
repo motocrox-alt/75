@@ -1,7 +1,7 @@
 // Piezas desbloqueadas (ids) del jugador actual. Permanentes: no se pierden en
 // reinicio. El Vestidor las usa además de la regla por día (hito).
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 
 interface WardrobeState {
   ids: string[];
@@ -12,7 +12,7 @@ interface WardrobeState {
 export const useWardrobeStore = create<WardrobeState>((set) => ({
   ids: [],
   cargar: async (uid) => {
-    const ids = await mockAdapter.getWardrobeIds(uid);
+    const ids = await adapter.getWardrobeIds(uid);
     set({ ids });
   },
   agregar: (nuevos) => set((s) => ({ ids: Array.from(new Set([...s.ids, ...nuevos])) })),

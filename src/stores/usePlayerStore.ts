@@ -1,6 +1,6 @@
-// Player del jugador logueado (cache denormalizado). Lee del mockAdapter.
+// Player del jugador logueado (cache denormalizado). Lee del adapter.
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import type { Player, AvatarSlots } from "@/lib/schemas";
 
 interface PlayerState {
@@ -15,13 +15,13 @@ interface PlayerState {
 export const usePlayerStore = create<PlayerState>((set) => ({
   player: null,
   cargar: async (uid) => {
-    const player = await mockAdapter.getPlayer(uid);
+    const player = await adapter.getPlayer(uid);
     set({ player });
   },
   equiparAvatar: (avatar) =>
     set((s) => (s.player ? { player: { ...s.player, avatar } } : s)),
   setNombre: (uid, nombre) => {
     set((s) => (s.player ? { player: { ...s.player, nombre } } : s));
-    void mockAdapter.setNombre(uid, nombre);
+    void adapter.setNombre(uid, nombre);
   },
 }));

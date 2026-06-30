@@ -1,6 +1,6 @@
 // Intentos del reto (append-only, mock).
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import type { Intento } from "@/lib/schemas";
 
 interface HistorialState {
@@ -11,7 +11,7 @@ interface HistorialState {
 export const useHistorialStore = create<HistorialState>((set) => ({
   intentos: [],
   cargar: async () => {
-    const intentos = await mockAdapter.getIntentos();
+    const intentos = await adapter.getIntentos();
     set({ intentos });
   },
 }));

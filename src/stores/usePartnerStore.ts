@@ -1,7 +1,7 @@
 // Compañero (read-only): player + dayLog de hoy + logros del OTRO jugador.
 // Dominio separado de usePlayerStore (ese es el jugador actual). Sin mutadores.
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import { useAuthStore, type Jugador } from "@/stores/useAuthStore";
 import { hoyKey } from "@/lib/utils/date";
 import type { Player, DayLog } from "@/lib/schemas";
@@ -30,9 +30,9 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     const uid = get().uidPartner();
     if (!uid) return;
     const [partner, partnerDay, partnerLogros] = await Promise.all([
-      mockAdapter.getPlayer(uid),
-      mockAdapter.getDayLog(uid, hoyKey()),
-      mockAdapter.getAchievements(uid),
+      adapter.getPlayer(uid),
+      adapter.getDayLog(uid, hoyKey()),
+      adapter.getAchievements(uid),
     ]);
     set({ partner, partnerDay, partnerLogros });
   },

@@ -1,7 +1,7 @@
 // Heatmap del reto (mock). El detalle se selecciona solo por número de día
 // (modal state = solo el id, regla CLAUDE.md).
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import type { DiaEstado } from "@/lib/schemas";
 
 interface CalendarState {
@@ -15,7 +15,7 @@ export const useCalendarStore = create<CalendarState>((set) => ({
   dias: [],
   diaSel: null,
   cargar: async (uid) => {
-    const dias = await mockAdapter.getRetoDias(uid);
+    const dias = await adapter.getRetoDias(uid);
     set({ dias });
   },
   seleccionar: (dia) => set({ diaSel: dia }),

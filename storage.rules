@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Reglas de Storage: fotos de progreso PRIVADAS por jugador.
+// Cada quien solo lee/escribe en progress/{su-slug}/...
+// ⚠️ ANTES DE DESPLEGAR: reemplaza los dos correos por los reales.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /progress/{uid}/{allPaths=**} {
+      allow read, write: if request.auth != null && (
+        (request.auth.token.email == 'CORREO_DE_GIO@ejemplo.com'   && uid == 'gio') ||
+        (request.auth.token.email == 'CORREO_DE_JENNI@ejemplo.com' && uid == 'jenni')
+      );
+    }
+  }
+}

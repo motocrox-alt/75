@@ -2,7 +2,7 @@
 // puro (cerrarDiaCompleto), PERSISTE el resultado (append-only) y sincroniza
 // los stores afectados. Guarda el resultado para la secuencia de recompensas.
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import { hoyKey } from "@/lib/utils/date";
 import { diaCerradoSimple } from "@/lib/dia";
 import { cerrarDiaCompleto, type EntradaCierre, type SalidaCierre } from "@/lib/game/cerrarDiaCompleto";
@@ -37,12 +37,12 @@ export const useCierreStore = create<CierreState>((set) => ({
     const otro = otroDe(jugador);
 
     const [player, pacto, microRachas, yaLogros, yaOutfits, otroLog] = await Promise.all([
-      mockAdapter.getPlayer(jugador),
-      mockAdapter.getPacto(),
-      mockAdapter.getMicroRachas(jugador),
-      mockAdapter.getAchievements(jugador),
-      mockAdapter.getWardrobeIds(jugador),
-      mockAdapter.getDayLog(otro, dayKey),
+      adapter.getPlayer(jugador),
+      adapter.getPacto(),
+      adapter.getMicroRachas(jugador),
+      adapter.getAchievements(jugador),
+      adapter.getWardrobeIds(jugador),
+      adapter.getDayLog(otro, dayKey),
     ]);
 
     if (!player || !pacto) {
@@ -77,18 +77,18 @@ export const useCierreStore = create<CierreState>((set) => ({
     const out = cerrarDiaCompleto(entrada, cumplidoCompañero);
 
     // ── Persistencia (append-only + caches) ──
-    await mockAdapter.appendXpLog(jugador, out.xpLogEntries);
-    await mockAdapter.updatePlayerCache(jugador, out.player);
-    await mockAdapter.setMicroRachas(jugador, out.microRachas);
-    if (out.logrosNuevos.length) await mockAdapter.unlockAchievements(jugador, out.logrosNuevos);
-    if (out.outfitsNuevos.length) await mockAdapter.unlockWardrobe(jugador, out.outfitsNuevos);
+    await adapter.appendXpLog(jugador, out.xpLogEntries);
+    await adapter.updatePlayerCache(jugador, out.player);
+    await adapter.setMicroRachas(jugador, out.microRachas);
+    if (out.logrosNuevos.length) await adapter.unlockAchievements(jugador, out.logrosNuevos);
+    if (out.outfitsNuevos.length) await adapter.unlockWardrobe(jugador, out.outfitsNuevos);
 
     const logCerrado = { ...log, cerrado: true, perfecto: out.perfecto, xpGanado: out.xpGanado };
-    await mockAdapter.setDayLog(jugador, dayKey, logCerrado);
+    await adapter.setDayLog(jugador, dayKey, logCerrado);
 
     if (out.reinicio.hay && out.reinicio.pactoNuevo && out.reinicio.intentoCerrado) {
-      await mockAdapter.appendIntento(out.reinicio.intentoCerrado);
-      await mockAdapter.updatePacto(out.reinicio.pactoNuevo);
+      await adapter.appendIntento(out.reinicio.intentoCerrado);
+      await adapter.updatePacto(out.reinicio.pactoNuevo);
     }
 
     // ── Sincroniza los stores afectados ──

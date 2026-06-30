@@ -80,6 +80,8 @@ export const PactoSchema = z.object({
   vinculoXp: z.number(),
   vinculoNivel: z.number(),
   jugadores: z.array(z.string()),
+  /** Quién ya entró (arranque al login de ambos). Opcional para compat. */
+  haEntrado: z.object({ gio: z.boolean(), jenni: z.boolean() }).optional(),
 });
 export type Pacto = z.infer<typeof PactoSchema>;
 

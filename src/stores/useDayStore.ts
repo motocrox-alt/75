@@ -1,7 +1,7 @@
 // DayLog de HOY del jugador actual (mock). UI + lógica local simple — NO es el
 // engine real de XP (eso es Fase B). Refleja el día con cálculos sencillos.
 import { create } from "zustand";
-import { mockAdapter } from "@/lib/firebase/mockAdapter";
+import { adapter } from "@/lib/firebase/adapter";
 import {
   MISIONES,
   esFinde,
@@ -83,7 +83,7 @@ export const useDayStore = create<DayState>((set, get) => {
     const { _uid, _dayKey, parejaChelaOk } = get();
     const actualizado = recomputar(log, parejaChelaOk);
     set({ log: actualizado });
-    if (_uid && _dayKey) void mockAdapter.setDayLog(_uid, _dayKey, actualizado);
+    if (_uid && _dayKey) void adapter.setDayLog(_uid, _dayKey, actualizado);
   };
 
   return {
@@ -94,7 +94,7 @@ export const useDayStore = create<DayState>((set, get) => {
 
     cargar: async (uid, dayKey) => {
       const finde = esFinde(new Date());
-      const existente = await mockAdapter.getDayLog(uid, dayKey);
+      const existente = await adapter.getDayLog(uid, dayKey);
       const base = existente ?? nuevoLog(finde);
       // Normaliza el tipo de chela al día de hoy.
       base.misiones.chela.tipo = finde ? "juntitos" : "sin";
