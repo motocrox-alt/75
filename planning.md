@@ -74,9 +74,14 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## FASE B — Engine de juego (puro + tests)
 
-- [ ] `lib/game/leveling.ts` — `xpParaNivel`, `nivelDesdeXp`
-- [ ] `lib/game/xp.ts` — `calcularXpDia(dayLog)`, `aplicarGananciaXp`
-- [ ] `lib/game/evaluarDia.ts` — `evaluarDia(dayLog)` → cumplido/fallido (foto NO cuenta)
+**B1 — Evaluar día · XP · stats · niveles (puro + tests) ✅**
+- [x] `config/leveling.ts` — `xpParaNivel`, `nivelDesdeXp`, `progresoNivel`, `nivelesGanados` (consolidado)
+- [x] `lib/game/xp.ts` — `calcularXpDia(dayLog)` (total + porStat + desglose para xpLog)
+- [x] `lib/game/evaluarDia.ts` — `evaluarDia(dayLog)` → cumplido/perfecto (foto NO cuenta)
+- [x] `lib/game/cierre.ts` — `aplicarCierreDia(player, log, ts)` PURO → player nuevo + xpLogEntries + subioNivel
+- [x] Vitest configurado (`vitest.config.ts`, scripts `test`/`test:watch`) + 19 tests verdes (evaluarDia, xp, leveling, cierre)
+
+**B2/B3 — pendientes**
 - [ ] `lib/game/streaks.ts` — micro-rachas con escudos; racha del reto sin escudo
 - [ ] `lib/game/reinicio.ts` — `decidirReinicio(jugadorA, jugadorB)` **solidario**: si cualquiera falla → reinicio para ambos, conserva personaje
 - [ ] `lib/game/achievements.ts` — `chequearLogros(estado)`

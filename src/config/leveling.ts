@@ -16,3 +16,7 @@ export const progresoNivel = (xp: number): number => {
   const hi = xpParaNivel(n + 1);
   return hi === lo ? 1 : (xp - lo) / (hi - lo);
 };
+
+/** Cuántos niveles se ganaron al pasar de xpAntes a xpDespues. */
+export const nivelesGanados = (xpAntes: number, xpDespues: number): number =>
+  nivelDesdeXp(xpDespues) - nivelDesdeXp(xpAntes);

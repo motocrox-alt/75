@@ -10,8 +10,10 @@ export type StatId =
   | "constancia"
   | "vinculo";
 
+export type MisionId = "entrenar" | "chela" | "comer" | "agua" | "leer" | "foto";
+
 export interface Mision {
-  id: "entrenar" | "chela" | "comer" | "agua" | "leer" | "foto";
+  id: MisionId;
   label: string;
   stat: StatId;
   xp: number;

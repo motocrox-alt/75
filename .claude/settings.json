@@ -25,7 +25,10 @@
       "Bash(git init *)",
       "Bash(git branch *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git ls-remote *)",
+      "Bash(echo \"EXIT_LSREMOTE=$?\")"
     ]
   }
 }
