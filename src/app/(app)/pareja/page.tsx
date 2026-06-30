@@ -1,6 +1,6 @@
 "use client";
 
-// Pareja: vista read-only del compañero + Vínculo + sincronía + chela del finde.
+// Pareja: vista read-only del compañero + Vínculo + sincronía + cerveza del finde.
 // Corazón co-op de la app. UI sobre mock (sin engine real).
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -25,7 +25,7 @@ export default function ParejaPage() {
   const partner = usePartnerStore((s) => s.partner);
   const partnerDay = usePartnerStore((s) => s.partnerDay);
 
-  // Día del jugador actual (para sincronía + confirmación de chela).
+  // Día del jugador actual (para sincronía + confirmación de cerveza).
   useEffect(() => {
     if (jugador) cargarDia(jugador, hoyKey());
   }, [jugador, cargarDia]);
@@ -35,7 +35,7 @@ export default function ParejaPage() {
     if (jugador) cargarPartner();
   }, [jugador, cargarPartner]);
 
-  // Confirmación de la chela del compañero → al day store (regla de pareja).
+  // Confirmación de la cerveza del compañero → al day store (regla de pareja).
   useEffect(() => {
     setParejaChelaOk(partnerDay?.misiones.chela.ok ?? false);
   }, [partnerDay, setParejaChelaOk]);
@@ -53,9 +53,9 @@ export default function ParejaPage() {
       <SyncIndicator />
       <PartnerCard />
 
-      {/* Chela del finde (acción de pareja) o recordatorio entre semana */}
+      {/* Cerveza del finde (acción de pareja) o recordatorio entre semana */}
       <div className="border-4 border-ink bg-coin px-4 py-2 shadow-[4px_4px_0_rgba(0,0,0,0.3)]">
-        <h2 className="font-press text-xs text-ink">CHELA DEL FINDE</h2>
+        <h2 className="font-press text-xs text-ink">CERVEZA DEL FINDE</h2>
       </div>
 
       {finde ? (
@@ -66,7 +66,7 @@ export default function ParejaPage() {
             <PixelIcon name="mug" scale={2} />
           </span>
           <span className="font-body text-sm text-ink/70">
-            La chela es solo de fin de semana, juntitos 🍺
+            La cerveza es solo de fin de semana, juntitos 🍺
           </span>
         </div>
       )}

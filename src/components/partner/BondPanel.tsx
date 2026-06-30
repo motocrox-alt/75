@@ -22,7 +22,7 @@ export function BondPanel() {
           <div className="h-full bg-coin transition-[width] duration-500" style={{ width: `${pct}%` }} />
         </div>
         <span className="font-body text-[11px] text-cream/90">
-          El Vínculo sube cuando los dos cierran el día y con la chela del finde.
+          El Vínculo sube cuando los dos cierran el día y con la cerveza del finde.
         </span>
       </div>
     </div>

@@ -14,7 +14,7 @@ export const LOGROS: Logro[] = [
   { id: "mitad", nombre: "Mitad del camino", icono: "chest", desc: "Llega al día 38" },
   { id: "hidratado", nombre: "Hidratado de acero", icono: "potion", desc: "30 días de agua sin fallar" },
   { id: "biblioteca", nombre: "Rata de biblioteca", icono: "book", desc: "750 páginas acumuladas" },
-  { id: "ritual", nombre: "Ritual sagrado", icono: "mug", desc: "Primer finde con la chela juntitos" },
+  { id: "ritual", nombre: "Ritual sagrado", icono: "mug", desc: "Primer finde con la cerveza juntitos" },
   { id: "sincronia", nombre: "Sincronía", icono: "heart", desc: "10 días los dos en verde el mismo día" },
   { id: "inquebrantables", nombre: "Inquebrantables", icono: "diamond", desc: "75 días completos (jefe final)" },
 ];

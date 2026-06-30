@@ -1,6 +1,6 @@
 "use client";
 
-// La chela (regla estrella). Entre semana = individual "sin chela".
+// La cerveza (regla estrella). Entre semana = individual "sin cerveza".
 // Finde = misión de pareja "juntitos": solo verde si ambos confirman.
 import { MissionCard } from "@/components/game/MissionCard";
 import { useDayStore } from "@/stores/useDayStore";
@@ -17,7 +17,7 @@ export function ChelaMission({ otroNombre }: { otroNombre: string }) {
   const mine = log.misiones.chela.ok;
   const verde = cumplida("chela");
 
-  const titulo = finde ? "Chela juntitos 🍺" : "Sin chela";
+  const titulo = finde ? "Cerveza juntitos 🍺" : "Sin cerveza";
   let subtitulo: React.ReactNode;
   if (!finde) {
     subtitulo = "Entre semana, seco 💪";

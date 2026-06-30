@@ -22,7 +22,7 @@ const otroDe = (j: Jugador): Jugador => (j === "gio" ? "jenni" : "gio");
 
 const NES_COLORS = ["#FBD000", "#E03B2C", "#00A844", "#5C94FC"];
 
-// Títulos cortos por misión (la chela tiene su propio componente).
+// Títulos cortos por misión (la cerveza tiene su propio componente).
 const TITULO: Record<Exclude<MisionId, "chela">, string> = {
   entrenar: "Entrenar",
   comer: "Comer limpio",
@@ -50,7 +50,7 @@ export default function HoyPage() {
     if (jugador) cargar(jugador, hoyKey());
   }, [jugador, cargar]);
 
-  // Carga del compañero (Vínculo + confirmación de la chela del finde).
+  // Carga del compañero (Vínculo + confirmación de la cerveza del finde).
   useEffect(() => {
     if (!jugador) return;
     const otro = otroDe(jugador);

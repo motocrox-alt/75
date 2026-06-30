@@ -1,7 +1,7 @@
 "use client";
 
 // Bloque NES de una misión: icono pixel + texto + checkbox-bloque.
-// Genérico: la chela compone este mismo bloque con accent + badge.
+// Genérico: la cerveza compone este mismo bloque con accent + badge.
 import { motion, useReducedMotion } from "framer-motion";
 import { Check } from "lucide-react";
 import { PixelIcon } from "@/components/game/PixelIcon";
@@ -13,7 +13,7 @@ interface Props {
   subtitulo: React.ReactNode;
   cumplida: boolean;
   onToggle: () => void;
-  accent?: boolean; // chela (regla estrella) → borde --mario
+  accent?: boolean; // cerveza (regla estrella) → borde --mario
   badge?: React.ReactNode; // pill 2X, status de pareja, etc.
 }
 
