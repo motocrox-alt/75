@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "Bash(rm -rf reto75-tmp)",
+      "Bash(npx --yes create-next-app@latest reto75-tmp --typescript --tailwind --app --eslint --src-dir --import-alias \"@/*\" --no-turbopack --use-npm --yes)",
+      "Bash(node -p \"require\\('./package.json'\\).dependencies.next + ' / tailwind ' + \\(require\\('./package.json'\\).devDependencies.tailwindcss||require\\('./package.json'\\).dependencies.tailwindcss\\)\")",
+      "Bash(rsync -a --exclude .git --exclude CLAUDE.md --exclude .next /private/tmp/claude-501/-Users-gio-75hard/016c00b6-9990-4c26-96a8-e2b4c73e484f/scratchpad/reto75-tmp/ /Users/gio/75hard/)",
+      "Bash(git --version)",
+      "Bash(npm i *)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('deps:',Object.keys\\(p.dependencies\\).sort\\(\\).join\\(', '\\)\\); console.log\\('devDeps:',Object.keys\\(p.devDependencies\\).sort\\(\\).join\\(', '\\)\\);\")",
+      "Bash(npx tsc *)",
+      "Bash(echo \"TSC_EXIT=$?\")",
+      "Bash(npx next *)",
+      "Bash(echo \"LINT_EXIT=$?\")",
+      "Bash(npx eslint *)",
+      "Bash(echo \"ESLINT_EXIT=$?\")",
+      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('src/config/sprites/sprites.ts','utf8'\\); const m=s.match\\(/export const ICONS[^{]*{\\([\\\\s\\\\S]*?\\)\\\\n};/\\); const keys=[...m[1].matchAll\\(/^\\\\s*\\([a-z]+\\):\\\\s*{/gm\\)].map\\(x=>x[1]\\); console.log\\('icons\\('+keys.length+'\\):',keys.join\\(', '\\)\\);\")",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(node -p \"require\\('lucide-react/package.json'\\).version\")",
+      "Bash(node -e \"const l=require\\('lucide-react'\\); ['Home','User','Shirt','Heart','CalendarDays','Trophy','Settings','LogOut','Hourglass'].forEach\\(n=>console.log\\(n, typeof l[n]\\)\\)\")",
+      "Bash(node -p \"require\\('recharts/package.json'\\).version\")",
+      "Bash(gh auth *)",
+      "Bash(git config *)",
+      "Bash(git init *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git add *)"
+    ]
+  }
+}
