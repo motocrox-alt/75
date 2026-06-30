@@ -100,8 +100,7 @@ export default function AjustesPage() {
       <SectionTitle>ACERCA DE</SectionTitle>
       <div className="border-4 border-ink bg-cloud p-4 shadow-[4px_4px_0_rgba(0,0,0,0.3)]">
         <p className="font-silk text-xs text-ink">Reto 75 Juntos</p>
-        <p className="mt-1 font-body text-xs text-ink/60">v0.1 · Fase A (mock)</p>
-        <p className="mt-2 font-body text-xs text-ink/60">Hecho con 💚 para Gio &amp; Jenni.</p>
+        <p className="mt-1 font-body text-xs text-ink/60">v1.0</p>
       </div>
 
       {/* Cerrar sesión */}
