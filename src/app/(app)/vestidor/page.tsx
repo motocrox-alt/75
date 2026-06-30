@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useAvatarStore } from "@/stores/useAvatarStore";
+import { useWardrobeStore } from "@/stores/useWardrobeStore";
 import { AvatarPreview } from "@/components/avatar/AvatarPreview";
 import { SlotGroup } from "@/components/avatar/SlotGroup";
 import { Toast } from "@/components/ui/Toast";
@@ -15,10 +16,14 @@ export default function VestidorPage() {
   const player = usePlayerStore((s) => s.player);
   const cargarAvatar = useAvatarStore((s) => s.cargar);
   const avatar = useAvatarStore((s) => s.avatar);
+  const cargarWardrobe = useWardrobeStore((s) => s.cargar);
 
   useEffect(() => {
-    if (jugador) cargarAvatar(jugador);
-  }, [jugador, cargarAvatar]);
+    if (jugador) {
+      cargarAvatar(jugador);
+      cargarWardrobe(jugador);
+    }
+  }, [jugador, cargarAvatar, cargarWardrobe]);
 
   if (!jugador || !avatar) {
     return <p className="font-silk text-ink/60">Cargando…</p>;

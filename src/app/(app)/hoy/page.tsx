@@ -11,11 +11,14 @@ import { hoyKey } from "@/lib/utils/date";
 import { MISIONES } from "@/config/rules";
 import { MISSION_ICON, CHARS } from "@/config/sprites/sprites";
 import { contarObligatorias } from "@/lib/dia";
+import { useCierreStore } from "@/stores/useCierreStore";
 import { RetoBar } from "@/components/game/RetoBar";
 import { HeroStrip } from "@/components/game/HeroStrip";
 import { MissionCard } from "@/components/game/MissionCard";
 import { ChelaMission } from "@/components/game/ChelaMission";
 import { DayBanner } from "@/components/game/DayBanner";
+import { RewardSequence } from "@/components/game/RewardSequence";
+import { ReinicioFlow } from "@/components/game/ReinicioFlow";
 import type { Player } from "@/lib/schemas";
 
 const otroDe = (j: Jugador): Jugador => (j === "gio" ? "jenni" : "gio");
@@ -41,6 +44,10 @@ export default function HoyPage() {
   const setEntrenoDoble = useDayStore((s) => s.setEntrenoDoble);
   const cumplida = useDayStore((s) => s.cumplida);
   const perfecto = useDayStore((s) => s.perfecto());
+  const faltantes = useDayStore((s) => s.faltantes());
+
+  const cerrarDia = useCierreStore((s) => s.cerrarDia);
+  const cerrando = useCierreStore((s) => s.cerrando);
 
   const [partner, setPartner] = useState<Player | null>(null);
   const [partnerAvance, setPartnerAvance] = useState(0);
@@ -99,8 +106,8 @@ export default function HoyPage() {
         <h2 className="font-press text-xs text-ink">MISIONES DE HOY</h2>
       </div>
 
-      {/* Las 6 misiones */}
-      <div className="flex flex-col gap-3">
+      {/* Las 6 misiones (read-only si el día ya está cerrado) */}
+      <div className={`flex flex-col gap-3 ${log.cerrado ? "pointer-events-none opacity-70" : ""}`}>
         {MISIONES.map((m) => {
           if (m.id === "chela") {
             return <ChelaMission key={m.id} otroNombre={CHARS[otroDe(jugador)].name} />;
@@ -159,6 +166,38 @@ export default function HoyPage() {
       </div>
 
       <DayBanner />
+
+      {/* Cerrar día / estado cerrado */}
+      {log.cerrado ? (
+        <div className="flex items-center justify-center gap-2 border-4 border-ink bg-pipe p-3 text-cloud shadow-[4px_4px_0_rgba(0,0,0,0.3)]">
+          <span className="font-press text-xs">DÍA CERRADO · +{log.xpGanado} XP</span>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={cerrarDia}
+          disabled={cerrando}
+          className={`border-4 border-ink p-4 font-press text-sm shadow-[4px_4px_0_rgba(0,0,0,0.3)] active:translate-y-0.5 active:shadow-[2px_2px_0_rgba(0,0,0,0.3)] disabled:opacity-60 ${
+            faltantes === 0 ? "bg-pipe text-cloud" : "bg-coin text-ink"
+          }`}
+        >
+          {cerrando
+            ? "CERRANDO…"
+            : faltantes === 0
+              ? "CERRAR DÍA ✓"
+              : `CERRAR DÍA (faltan ${faltantes})`}
+        </button>
+      )}
+
+      {!log.cerrado && faltantes > 0 && (
+        <p className="text-center font-body text-xs text-ink/50">
+          Si cierras incompleto, se activa el reinicio solidario.
+        </p>
+      )}
+
+      {/* Overlays de recompensa / reinicio (se auto-ocultan) */}
+      <RewardSequence />
+      <ReinicioFlow />
     </div>
   );
 }

@@ -1,14 +1,14 @@
 // Adapter en memoria (mock-first). Mismos métodos que tendrá el gemelo Firebase.
 // Datos semilla a MITAD del reto (día ~40) para que las vistas se vean vivas.
 // USE_MOCK por default true; el estado vive en memoria (sin localStorage).
+// Append-only: xpLog/achievements/wardrobe/intentos se appendean; los caches
+// (players/pacto) se actualizan.
 import {
   PactoSchema,
   PlayerSchema,
-  WardrobePieceSchema,
   type Pacto,
   type Player,
   type DayLog,
-  type WardrobePiece,
   type XpLogEntry,
   type DiaEstado,
   type MisionId,
@@ -17,14 +17,16 @@ import {
 import { WARDROBE } from "@/config/wardrobe";
 import { RETO_DIAS } from "@/config/rules";
 import { hoyKey } from "@/lib/utils/date";
+import { evaluarDia } from "@/lib/game/evaluarDia";
+import type { MicroRacha } from "@/lib/game/streaks";
 
 export const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK !== "false";
 
 const DIA_RETO = 40;
 
-// ── Pacto (a mitad del reto, segundo intento) ─────────────
-const seedPacto: Pacto = PactoSchema.parse({
-  retoInicio: Date.parse("2026-05-21T00:00:00") || 0, // ~40 días antes de hoy
+// ── Pacto (a mitad del reto, segundo intento). Mutable: updatePacto lo cambia.
+let pactoActual: Pacto = PactoSchema.parse({
+  retoInicio: Date.parse("2026-05-21T00:00:00") || 0,
   retoDiaActual: DIA_RETO,
   retoEstado: "activo",
   intentoActual: 2,
@@ -37,7 +39,7 @@ const seedPacto: Pacto = PactoSchema.parse({
 const seedGio: Player = PlayerSchema.parse({
   nombre: "Gio",
   nivel: 7,
-  xp: 2050, // dentro del nivel 7 (1852..2263)
+  xp: 2200, // nivel 7 (1852..2263), cerca del umbral → level-up demoable al cerrar
   stats: { fuerza: 58, templanza: 44, vitalidad: 40, mente: 36, constancia: 22, vinculo: 64 },
   rachaReto: DIA_RETO,
   ultimoDiaCerrado: hoyKey(new Date(Date.now() - 86_400_000)),
@@ -47,7 +49,7 @@ const seedGio: Player = PlayerSchema.parse({
 const seedJenni: Player = PlayerSchema.parse({
   nombre: "Jenni",
   nivel: 6,
-  xp: 1650, // dentro del nivel 6 (1470..1852)
+  xp: 1800, // nivel 6 (1470..1852), cerca del umbral
   stats: { fuerza: 40, templanza: 50, vitalidad: 46, mente: 48, constancia: 30, vinculo: 64 },
   rachaReto: DIA_RETO,
   ultimoDiaCerrado: hoyKey(new Date(Date.now() - 86_400_000)),
@@ -56,22 +58,29 @@ const seedJenni: Player = PlayerSchema.parse({
 
 const players: Record<string, Player> = { gio: seedGio, jenni: seedJenni };
 
-// ── Wardrobe: todo lo con unlockDay<=40 ya desbloqueado (incluye ember d38) ──
-const buildWardrobe = (): WardrobePiece[] =>
-  WARDROBE.filter((p) => p.unlockDay <= DIA_RETO).map((p) =>
-    WardrobePieceSchema.parse({
-      slot: p.slot,
-      fuente: p.fuente,
-      desbloqueadoEn: p.unlockDay,
-    }),
-  );
+// ── Wardrobe: ids desbloqueados (permanentes; no se pierden en reinicio). ──
+const baselineWardrobe = (): string[] =>
+  WARDROBE.filter((p) => p.unlockDay <= DIA_RETO).map((p) => p.id);
 
-const wardrobe: Record<string, WardrobePiece[]> = {
-  gio: buildWardrobe(),
-  jenni: buildWardrobe(),
+const wardrobeIds: Record<string, string[]> = {
+  gio: baselineWardrobe(),
+  jenni: baselineWardrobe(),
 };
 
-// ── DayLogs recientes (mezcla de perfectos y normales) ────
+// ── Micro-rachas de hábito (con escudos). Agua en 29 → cerrar hoy llega a 30
+//    y desbloquea "Hidratado de acero". ──
+const seedMicroRachas = (): Record<string, MicroRacha> => ({
+  agua: { dias: 29, escudos: 2 },
+  entrenar: { dias: 12, escudos: 0 },
+  leer: { dias: 8, escudos: 0 },
+});
+
+const microRachas: Record<string, Record<string, MicroRacha>> = {
+  gio: seedMicroRachas(),
+  jenni: seedMicroRachas(),
+};
+
+// ── DayLogs ───────────────────────────────────────────────
 const mkDay = (
   offsetDias: number,
   opts: { perfecto?: boolean; doble?: boolean; chela?: "sin" | "juntitos"; xp: number },
@@ -96,18 +105,18 @@ const mkDay = (
   return [key, log];
 };
 
-// "Hoy" en curso: día parcial (3/5 obligatorias) para que la pantalla se vea
-// viva y el flujo de pareja sea demostrable. La chela queda confirmada por
-// este jugador (sirve como confirmación del compañero al verlo desde el otro).
+// "Hoy" en curso: 5 obligatorias en verde (el compañero cumple por defecto →
+// cerrar sin reinicio). Falta la foto: súbela para "día perfecto". Para probar
+// el reinicio solidario, desmarca una obligatoria antes de cerrar.
 const mkHoy = (): [string, DayLog] => {
   const fecha = new Date();
   const log: DayLog = {
     misiones: {
       entrenar: { hecho: true, doble: false },
       chela: { tipo: "sin", ok: true },
-      comida: { ok: false },
+      comida: { ok: true },
       agua: { ok: true },
-      lectura: { ok: false, paginas: 0 },
+      lectura: { ok: true, paginas: 10 },
       foto: { ok: false, storagePath: undefined },
     },
     cerrado: false,
@@ -134,8 +143,7 @@ const dayLogs: Record<string, Record<string, DayLog>> = {
 
 const xpLog: Record<string, XpLogEntry[]> = { gio: [], jenni: [] };
 
-// Intentos del reto (append-only). Coherente con el día 40, intento #2 en curso.
-// El #1 se reinició (épica, no vergüenza): 22 días recorridos juntos.
+// Intentos (append-only). Intento #1 reiniciado; #2 en curso.
 const seedIntentos: Intento[] = [
   {
     numero: 1,
@@ -151,8 +159,7 @@ const seedIntentos: Intento[] = [
   },
 ];
 
-// Logros ya desbloqueados (semilla coherente con el día 40). Solo el dato:
-// la evaluación real es Fase B.
+// Logros ya desbloqueados (semilla coherente con el día 40).
 const achievements: Record<string, string[]> = {
   gio: ["primer_paso", "primera_semana", "mitad", "ritual"],
   jenni: ["primer_paso", "primera_semana", "mitad", "ritual", "sincronia"],
@@ -160,14 +167,23 @@ const achievements: Record<string, string[]> = {
 
 // ── API async (gemela de la futura de Firebase) ───────────
 const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v)) as T;
+const unir = (a: string[], b: string[]): string[] => Array.from(new Set([...a, ...b]));
 
 export const mockAdapter = {
   async getPacto(): Promise<Pacto> {
-    return clone(seedPacto);
+    return clone(pactoActual);
+  },
+
+  async updatePacto(pacto: Pacto): Promise<void> {
+    pactoActual = PactoSchema.parse(pacto);
   },
 
   async getPlayer(uid: string): Promise<Player | null> {
     return players[uid] ? clone(players[uid]) : null;
+  },
+
+  async updatePlayerCache(uid: string, player: Player): Promise<void> {
+    players[uid] = PlayerSchema.parse(player);
   },
 
   async getDayLog(uid: string, dayKey: string): Promise<DayLog | null> {
@@ -179,17 +195,39 @@ export const mockAdapter = {
     dayLogs[uid][dayKey] = clone(log);
   },
 
-  async listWardrobe(uid: string): Promise<WardrobePiece[]> {
-    return clone(wardrobe[uid] ?? []);
+  // ── Append-only ──
+  async appendXpLog(uid: string, entries: XpLogEntry[]): Promise<void> {
+    xpLog[uid] ??= [];
+    xpLog[uid].push(...entries.map(clone));
   },
 
-  async appendXp(uid: string, entry: XpLogEntry): Promise<void> {
-    xpLog[uid] ??= [];
-    xpLog[uid].push(clone(entry));
+  async appendIntento(intento: Intento): Promise<void> {
+    seedIntentos.push(clone(intento));
   },
 
   async getAchievements(uid: string): Promise<string[]> {
     return clone(achievements[uid] ?? []);
+  },
+
+  async unlockAchievements(uid: string, ids: string[]): Promise<void> {
+    achievements[uid] = unir(achievements[uid] ?? [], ids);
+  },
+
+  async getWardrobeIds(uid: string): Promise<string[]> {
+    return clone(wardrobeIds[uid] ?? []);
+  },
+
+  async unlockWardrobe(uid: string, ids: string[]): Promise<void> {
+    wardrobeIds[uid] = unir(wardrobeIds[uid] ?? [], ids);
+  },
+
+  // ── Micro-rachas ──
+  async getMicroRachas(uid: string): Promise<Record<string, MicroRacha>> {
+    return clone(microRachas[uid] ?? {});
+  },
+
+  async setMicroRachas(uid: string, rachas: Record<string, MicroRacha>): Promise<void> {
+    microRachas[uid] = clone(rachas);
   },
 
   async setAvatar(uid: string, avatar: Player["avatar"]): Promise<void> {
@@ -204,30 +242,41 @@ export const mockAdapter = {
     return clone(seedIntentos);
   },
 
-  // Heatmap del intento actual: 75 días sembrados coherentes con el día 40.
-  // Intento #2 sin fallos internos; los reinicios viven en el historial.
+  // Heatmap del intento actual: reconstruye desde los dayLogs reales los días
+  // ya cerrados; el resto cae a la semilla por patrón. Usa el pacto vivo.
   async getRetoDias(uid: string): Promise<DiaEstado[]> {
     const OBLIG5: MisionId[] = ["entrenar", "chela", "comer", "agua", "leer"];
     const OBLIG6: MisionId[] = [...OBLIG5, "foto"];
-    const offset = uid === "jenni" ? 2 : 0; // patrón de perfectos distinto por jugador
+    const diaActual = pactoActual.retoDiaActual;
+    const offset = uid === "jenni" ? 2 : 0;
     const dias: DiaEstado[] = [];
 
+    const logReal = (d: number): DayLog | null => {
+      const key = hoyKey(new Date(Date.now() - (diaActual - d) * 86_400_000));
+      return dayLogs[uid]?.[key] ?? null;
+    };
+
     for (let d = 1; d <= RETO_DIAS; d++) {
-      if (d < DIA_RETO) {
+      const real = logReal(d);
+
+      if (real?.cerrado) {
+        // Día con log real cerrado → estado desde el log.
+        dias.push({
+          dia: d,
+          estado: real.perfecto ? "perfecto" : "cumplido",
+          dayKey: hoyKey(new Date(real.ts)),
+          resumen: { misionesOk: evaluarDia(real).misionesOk, perfecto: real.perfecto },
+        });
+      } else if (d < diaActual) {
+        // Pasado sin log real → semilla por patrón.
         const perfecto = (d + offset) % 4 === 0;
         dias.push({
           dia: d,
           estado: perfecto ? "perfecto" : "cumplido",
-          dayKey: hoyKey(new Date(Date.now() - (DIA_RETO - d) * 86_400_000)),
           resumen: { misionesOk: perfecto ? OBLIG6 : OBLIG5, perfecto },
         });
-      } else if (d === DIA_RETO) {
-        dias.push({
-          dia: d,
-          estado: "hoy",
-          dayKey: hoyKey(),
-          resumen: { misionesOk: ["entrenar", "chela", "agua"], perfecto: false },
-        });
+      } else if (d === diaActual) {
+        dias.push({ dia: d, estado: "hoy", dayKey: hoyKey() });
       } else {
         dias.push({ dia: d, estado: "futuro" });
       }

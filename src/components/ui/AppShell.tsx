@@ -20,6 +20,8 @@ import {
 import { useAuthStore } from "@/stores/useAuthStore";
 import { usePactoStore } from "@/stores/usePactoStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useAchievementsStore } from "@/stores/useAchievementsStore";
+import { useWardrobeStore } from "@/stores/useWardrobeStore";
 import { AvatarCanvas } from "@/components/avatar/AvatarCanvas";
 import { RETO_DIAS } from "@/config/rules";
 
@@ -54,14 +56,20 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const player = usePlayerStore((s) => s.player);
   const cargarPlayer = usePlayerStore((s) => s.cargar);
+  const cargarLogros = useAchievementsStore((s) => s.cargar);
+  const cargarWardrobe = useWardrobeStore((s) => s.cargar);
 
   useEffect(() => {
     cargarPacto();
   }, [cargarPacto]);
 
   useEffect(() => {
-    if (jugador) cargarPlayer(jugador);
-  }, [jugador, cargarPlayer]);
+    if (jugador) {
+      cargarPlayer(jugador);
+      cargarLogros(jugador);
+      cargarWardrobe(jugador);
+    }
+  }, [jugador, cargarPlayer, cargarLogros, cargarWardrobe]);
 
   const salir = () => {
     logout();

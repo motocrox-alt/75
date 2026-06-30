@@ -72,7 +72,7 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ---
 
-## FASE B — Engine de juego (puro + tests)
+## FASE B — Engine de juego (puro + tests) ✅ COMPLETA
 
 **B1 — Evaluar día · XP · stats · niveles (puro + tests) ✅**
 - [x] `config/leveling.ts` — `xpParaNivel`, `nivelDesdeXp`, `progresoNivel`, `nivelesGanados` (consolidado)
@@ -88,9 +88,17 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 - [x] `lib/game/wardrobe.ts` — `chequearOutfits(ctx)` por hito/nivel/logro + `Condicion` en `config/wardrobe.ts`
 - [x] **Tests** Vitest: escudos, reinicio solidario, logros por umbral, outfits por hito/nivel/logro — 43 tests verdes (B1+B2)
 
-**B3 — pendiente (cablear a stores/UI)**
-- [ ] Cablear engine a stores (usePlayerStore, usePactoStore, useDayStore, useAvatarStore) sobre mock
-- [ ] Cierre de día: aplica XP, actualiza stats/caches, chequea logros **y outfits**, evalúa reinicio
+**B3 — Cablear el engine a la UI (Cerrar día · recompensas · reinicio) ✅**
+- [x] `lib/game/cerrarDiaCompleto.ts` — orquestador (casi-puro) que une B1+B2 + test
+- [x] `useCierreStore` — arma la entrada del mock, invoca el engine, persiste (append-only) y sincroniza stores
+- [x] Métodos nuevos en `mockAdapter`: appendXpLog, unlockAchievements, unlockWardrobe, appendIntento, updatePlayerCache, updatePacto, getMicroRachas/setMicroRachas, getWardrobeIds
+- [x] Botón "Cerrar día" en `/hoy` + estado cerrado (read-only)
+- [x] `RewardSequence` (XP/confeti, level-up, logros, outfits) respetando reduced-motion
+- [x] `ReinicioFlow` "Nuevo intento, juntos" (conserva nivel/logros/outfits)
+- [x] Calendario reconstruido desde dayLogs reales (`getRetoDias`) + `useWardrobeStore` (outfits permanentes)
+- [x] Tests: orquestador + integración del ciclo de cierre vía mockAdapter — 48 tests verdes
+
+> **Fase B cerrada:** cerrar un día mueve XP/nivel/stats/logros de verdad y el reinicio solidario conserva el personaje. Todo sobre mock.
 
 ---
 

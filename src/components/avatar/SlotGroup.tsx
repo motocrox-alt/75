@@ -6,6 +6,7 @@ import { AvatarCanvas } from "@/components/avatar/AvatarCanvas";
 import { PixelIcon } from "@/components/game/PixelIcon";
 import { useAvatarStore } from "@/stores/useAvatarStore";
 import { usePactoStore } from "@/stores/usePactoStore";
+import { useWardrobeStore } from "@/stores/useWardrobeStore";
 import { useToastStore } from "@/stores/useToastStore";
 import { WARDROBE, desbloqueada, type Slot } from "@/config/wardrobe";
 import { CHARS } from "@/config/sprites/sprites";
@@ -21,12 +22,16 @@ export function SlotGroup({ slot, char }: { slot: Slot; char: keyof typeof CHARS
   const avatar = useAvatarStore((s) => s.avatar);
   const equipar = useAvatarStore((s) => s.equipar);
   const diaReto = usePactoStore((s) => s.pacto?.retoDiaActual ?? 0);
+  const wardrobeIds = useWardrobeStore((s) => s.ids);
   const showToast = useToastStore((s) => s.show);
 
   if (!avatar) return null;
 
   const avatarKey = SLOT_AVATAR[slot];
   const piezas = WARDROBE.filter((p) => p.slot === slot);
+  // Desbloqueada = por día (hito) O ya persistida (permanente, sobrevive reinicio).
+  const estaDesbloqueada = (p: (typeof piezas)[number]) =>
+    desbloqueada(p, diaReto) || wardrobeIds.includes(p.id);
 
   return (
     <section className="flex flex-col gap-2">
@@ -37,7 +42,7 @@ export function SlotGroup({ slot, char }: { slot: Slot; char: keyof typeof CHARS
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
         {piezas.map((pieza) => {
           const compuesto = { ...avatar, [avatarKey]: pieza.id };
-          const unlocked = desbloqueada(pieza, diaReto);
+          const unlocked = estaDesbloqueada(pieza);
           const equipped = avatar[avatarKey] === pieza.id;
           const cofre = pieza.unlockDay >= 75;
 
